@@ -12,6 +12,7 @@ Verses of the Qur'an
 Hadeth screen
 
 ![WhatsApp Image 2024-01-28(1)](https://github.com/NadaMansour20/IslamiApp/assets/125664031/36453285-6125-43af-9cc6-bc7db3738407)
+
 ![Screenshot 2024-01-28 210443](https://github.com/NadaMansour20/IslamiApp/assets/125664031/da22c259-2490-4fb9-8437-86e39959f9c2)
 
 Sebha screen
