@@ -1,4 +1,4 @@
-![WhatsApp Image 2024-01-28 at 9 00 52 PM](https://github.com/NadaMansour20/IslamiApp/assets/125664031/10d89202-8078-48e8-a86e-0256fcaca685)<h1> Islami App </h1>
+<h1> Islami App </h1>
 Android Mobile Application that display all Verses of the Qur'an , Hadeth , Quran Radio and Rosary for seeking forgiveness.
 <h1> Screen shots</h1>
 Home screen
