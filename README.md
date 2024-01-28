@@ -1,4 +1,4 @@
-<h1> Islami App </h1>
+![WhatsApp Image 2024-01-28(2)](https://github.com/NadaMansour20/IslamiApp/assets/125664031/0db80da6-8073-43c5-9cad-73713d2b5093)<h1> Islami App </h1>
 Android Mobile Application that display all Verses of the Qur'an , Hadeth , Quran Radio and Rosary for seeking forgiveness.
 <h1> Screen shots</h1>
 Home screen
@@ -8,12 +8,14 @@ Home screen
 Verses of the Qur'an
 
 ![WhatsApp Image 2024-01-28 at 9 00 52 PM](https://github.com/NadaMansour20/IslamiApp/assets/125664031/0500af1f-6c80-419a-95cf-b8c082bbd605)
+![WhatsApp Image 2024-01-28(2)](https://github.com/NadaMansour20/IslamiApp/assets/125664031/87420880-c1e3-4cea-b189-b1309c983108)
+
 
 Hadeth screen
 
 ![WhatsApp Image 2024-01-28(1)](https://github.com/NadaMansour20/IslamiApp/assets/125664031/36453285-6125-43af-9cc6-bc7db3738407)
+![WhatsApp Image 2024-01-28 (2)](https://github.com/NadaMansour20/IslamiApp/assets/125664031/dd7fc42c-b8c6-4cf0-98b2-9f42873a75bf)
 
-![Screenshot 2024-01-28 210443](https://github.com/NadaMansour20/IslamiApp/assets/125664031/da22c259-2490-4fb9-8437-86e39959f9c2)
 
 Sebha screen
 
