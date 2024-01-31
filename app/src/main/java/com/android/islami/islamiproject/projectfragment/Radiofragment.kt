@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.android.islami.R
 
@@ -13,8 +14,7 @@ import com.android.islami.R
 class Radiofragment:Fragment() {
 
     lateinit var player:MediaPlayer
-    lateinit var twasheh:MediaPlayer
-    lateinit var buttonplay:ImageButton
+    lateinit var buttonStop:ImageButton
     lateinit var buttonnext:ImageButton
     lateinit var buttonprev:ImageButton
 
@@ -24,32 +24,45 @@ class Radiofragment:Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonplay=view.findViewById(R.id.play)
+        buttonStop=view.findViewById(R.id.play)
         buttonnext=view.findViewById(R.id.next)
         buttonprev=view.findViewById(R.id.prev)
-        buttonplay.setOnClickListener {
-            playmusic()
+        buttonStop.setOnClickListener {
+                playmusic()
 
         }
         buttonnext.setOnClickListener {
-            playtwashih()
+
+            player.stop()
+            buttonStop.setImageDrawable(resources.getDrawable(R.drawable.baseline_play_arrow_24))
+            player = MediaPlayer.create(context, R.raw.radio)
+            player.start()
 
         }
         buttonprev.setOnClickListener {
-            twasheh.stop()
-            playmusic()
 
+            playtwashih()
         }
     }
-
+    var play=0
    fun playmusic() {
-        player=MediaPlayer.create(context,R.raw.radio)
-        player.start()
+       if(play==0) {
+           play=1
+           buttonStop.setImageDrawable(resources.getDrawable(R.drawable.baseline_pause_24))
+           player = MediaPlayer.create(context, R.raw.radio)
+           player.start()
+       }
+       else{
+           player.stop()
+           buttonStop.setImageDrawable(resources.getDrawable(R.drawable.baseline_play_arrow_24))
+           play=0
+       }
     }
     fun playtwashih(){
         player.stop()
-        twasheh=MediaPlayer.create(context,R.raw.twashih)
-        twasheh.start()
+        buttonStop.setImageDrawable(resources.getDrawable(R.drawable.baseline_play_arrow_24))
+        player=MediaPlayer.create(context,R.raw.twashih)
+        player.start()
     }
 
 }

@@ -14,7 +14,7 @@ class Tasbehfragment:Fragment() {
     lateinit var buttonnumbertasbeh:Button
     lateinit var  buttonTasbeh:Button
     lateinit var sebha:ImageView
-    val ahadeth= arrayListOf("سبحان الله","الحمدالله","لا اله الا الله","استغفر الله العظيم","اللهم صل وسلم علي سيدنا محمد")
+    val ahadeth= arrayListOf("سبحان الله","الحمدالله","لا اله الا الله","الله أكبر","استغفر الله العظيم","اللهم صل وسلم علي سيدنا محمد")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.tasbehfragment, container, false)

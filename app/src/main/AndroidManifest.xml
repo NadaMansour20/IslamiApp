@@ -16,12 +16,14 @@
             android:name=".islamiproject.main.HadethDetailes"
             android:exported="false"
             android:label="@string/title_activity_hadeth_detailes"
-            android:theme="@style/Theme.Islami" />
+            android:theme="@style/Theme.Islami"
+        />
         <activity
             android:name=".islamiproject.main.SuraDetailes"
             android:exported="false"
             android:label="@string/title_activity_sura_detailes"
-            android:theme="@style/Theme.Islami" />
+            android:theme="@style/Theme.Islami"
+        />
         <activity
             android:name=".islamiproject.main.Home"
             android:exported="false" />

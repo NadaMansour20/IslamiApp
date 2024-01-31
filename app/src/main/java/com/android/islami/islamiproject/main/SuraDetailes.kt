@@ -1,7 +1,10 @@
 package com.android.islami.islamiproject.main
 
+import android.content.Intent
 import android.content.res.AssetManager
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.islami.Constent
 import com.android.islami.R
 import com.android.islami.databinding.ActivitySuraDetailesBinding
+import com.android.islami.islamiproject.projectfragment.Hadethfragment
+import com.android.islami.islamiproject.projectfragment.QuranFragment
 import com.android.islami.islamiproject.recyclerview.AyatquranAdapter
 
 class SuraDetailes : AppCompatActivity() {
@@ -32,6 +37,8 @@ class SuraDetailes : AppCompatActivity() {
         var titleofsura=intent.getStringExtra(Constent.name)
         suratitle.text=titleofsura
         readsuracontentfromassets(posofsura)
+
+
 
     }
 
