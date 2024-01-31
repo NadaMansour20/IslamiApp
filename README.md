@@ -7,8 +7,9 @@ Home screen
 
 Verses of the Qur'an
 
-![WhatsApp Image 2024-01-28 at 9 00 52 PM](https://github.com/NadaMansour20/IslamiApp/assets/125664031/0500af1f-6c80-419a-95cf-b8c082bbd605)
-![WhatsApp Image 2024-01-28(2)](https://github.com/NadaMansour20/IslamiApp/assets/125664031/87420880-c1e3-4cea-b189-b1309c983108)
+![WhatsApp Image 2024-02-01 ](https://github.com/NadaMansour20/IslamiApp/assets/125664031/5b25646e-d181-4605-aaf9-a4ba720a41d6)
+
+![WhatsApp Image 2024-02-01(1)](https://github.com/NadaMansour20/IslamiApp/assets/125664031/e2c5ad64-a8fc-4d99-8e00-ec8e5d81805e)
 
 
 Hadeth screen
