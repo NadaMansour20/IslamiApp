@@ -26,7 +26,6 @@ Tasbeh screen
 
  Quran Radio
  
- ![WhatsApp Image 2024-01-28 at 9 00 50 PM](https://github.com/NadaMansour20/IslamiApp/assets/125664031/21e22902-5126-4c0b-9f4e-b9166b2cfbd8)
- 
- 
+![WhatsApp Image 2024-02-01 (2)](https://github.com/NadaMansour20/IslamiApp/assets/125664031/c5f40f5b-edd7-4753-8236-c4f9f65eaea9)
 
+![WhatsApp Image 2024-02-01(3)](https://github.com/NadaMansour20/IslamiApp/assets/125664031/8f5f7504-43cb-4946-b003-82b474c13111)
