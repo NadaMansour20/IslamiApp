@@ -1,14 +1,17 @@
 package com.android.islami.islamiproject.projectfragment
 
+import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -22,12 +25,14 @@ import com.android.islami.islamiproject.recyclerview.QranAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 
 class QuranFragment: Fragment() {
     var quran_mediaPlayer = MediaPlayer()
     lateinit var recyclerview: RecyclerView
     lateinit var quranadapter: QranAdapter
-    lateinit var quran_list: List<DataItem>
+    var quran_list: List<DataItem?>? = null
+    var is_play = 0
 
     val datalist = arrayListOf(
         "الفاتحه",
@@ -154,12 +159,14 @@ class QuranFragment: Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.quranfragment, container, false)
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init()
 
+        init()
 
     }
 
@@ -208,13 +215,18 @@ class QuranFragment: Fragment() {
                 quranProgress: ProgressBar
             ) {
 
-                if (quran_mediaPlayer.isPlaying) {
+
+                if (quran_mediaPlayer.isPlaying || is_play == 1) {
+                    quranProgress.isVisible = false
                     quranPlay.setImageResource(R.drawable.ic_play_radio)
                     quran_mediaPlayer.stop()
+                    is_play = 0
 
                 } else {
+                    isNetworkConnected()
                     quranPlay.setImageResource(R.drawable.ic_pause_radio)
                     quran_sound(pos, quranProgress)
+                    is_play = 1
                 }
             }
 
@@ -231,7 +243,7 @@ class QuranFragment: Fragment() {
     fun get_quran_audio() {
         BuildRetrofit.get_api().get_quran_audio().enqueue(object : Callback<QuranResponse> {
             override fun onResponse(call: Call<QuranResponse>, response: Response<QuranResponse>) {
-                quran_list = response.body()?.data as List<DataItem>
+                quran_list = response.body()?.data
             }
 
             override fun onFailure(call: Call<QuranResponse>, t: Throwable) {
@@ -242,7 +254,7 @@ class QuranFragment: Fragment() {
 
     fun quran_sound(position: Int, quranProgress: ProgressBar) {
         quranProgress.isVisible = true
-        val url = quran_list.get(position).recitation?.full
+        val url = quran_list?.get(position)?.recitation?.full
         quran_mediaPlayer = MediaPlayer().apply {
             setAudioAttributes(
                 AudioAttributes.Builder()
@@ -250,8 +262,14 @@ class QuranFragment: Fragment() {
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .build()
             )
-            setDataSource(url)
-            prepareAsync() // might take long! (for buffering, etc)
+            try {
+                setDataSource(url.toString())
+                prepareAsync() // might take long! (for buffering, etc)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+
         }
         quran_mediaPlayer.setOnPreparedListener(object : MediaPlayer.OnPreparedListener {
             override fun onPrepared(mp: MediaPlayer?) {
@@ -260,6 +278,22 @@ class QuranFragment: Fragment() {
             }
 
         })
+    }
+
+    fun isNetworkConnected(): Boolean {
+        val cm =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val ni = cm.activeNetworkInfo
+        if (ni == null) {
+
+            Toast.makeText(
+                requireContext(),
+                "للأسف لا يوجد لديك اتصال بالانترنت",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        }
+        return true
     }
 
 

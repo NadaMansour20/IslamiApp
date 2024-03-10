@@ -1,14 +1,18 @@
 package com.android.islami.islamiproject.projectfragment
 
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.android.islami.R
@@ -18,6 +22,7 @@ import com.android.islami.islamiproject.Api.RadiosItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 
 
 class Radiofragment:Fragment() {
@@ -27,7 +32,7 @@ class Radiofragment:Fragment() {
     lateinit var buttonnext: ImageButton
     lateinit var buttonprev: ImageButton
     lateinit var progressBar: ProgressBar
-    lateinit var radio_item: List<RadiosItem>
+    var radio_item: List<RadiosItem?>? = null
     var position = 0
     var radio_mediaPlayer = MediaPlayer()
     var is_play = 0
@@ -61,13 +66,16 @@ class Radiofragment:Fragment() {
 
 
         buttonStop.setOnClickListener {
+
             progressBar.isVisible = true
-            radio_text.text = radio_item.get(position).name
+            radio_text.text = radio_item?.get(position)?.name
             if (is_play == 0) {
+                isNetworkConnected()
                 play_sound(position)
                 buttonStop.setImageResource(R.drawable.ic_pause_radio)
                 is_play = 1
             } else {
+
                 progressBar.isVisible = false
                 radio_mediaPlayer.stop()
                 buttonStop.setImageResource(R.drawable.ic_play_radio)
@@ -76,9 +84,10 @@ class Radiofragment:Fragment() {
             }
         }
         buttonnext.setOnClickListener {
+            isNetworkConnected()
             position++
 
-            radio_text.text = radio_item.get(position).name
+            radio_text.text = radio_item?.get(position)?.name
 
             if (radio_mediaPlayer.isPlaying) {
                 radio_mediaPlayer.stop()
@@ -88,6 +97,7 @@ class Radiofragment:Fragment() {
 
         }
        buttonprev.setOnClickListener {
+           isNetworkConnected()
            position--
 
            //first audio
@@ -96,7 +106,7 @@ class Radiofragment:Fragment() {
            } else {
 
                if (radio_mediaPlayer.isPlaying) radio_mediaPlayer.stop()
-               radio_text.text = radio_item.get(position).name
+               radio_text.text = radio_item?.get(position)?.name
                play_sound(position)
            }
         }
@@ -107,10 +117,12 @@ class Radiofragment:Fragment() {
 
         BuildRetrofit.get_api().get_radio().enqueue(object :Callback<RadioResponse>{
             override fun onResponse(call: Call<RadioResponse>, response: Response<RadioResponse>) {
-                radio_item = response.body()?.radios as List<RadiosItem>
+                radio_item = response.body()?.radios
+                Log.e("onResponse: ", response.body()?.radios.toString())
             }
 
             override fun onFailure(call: Call<RadioResponse>, t: Throwable) {
+
 
             }
 
@@ -119,7 +131,7 @@ class Radiofragment:Fragment() {
 
     fun play_sound(position: Int) {
         progressBar.isVisible = true
-        val url = radio_item.get(position).uRL
+        val url = radio_item?.get(position)?.uRL
         radio_mediaPlayer = MediaPlayer().apply {
             setAudioAttributes(
                 AudioAttributes.Builder()
@@ -127,8 +139,12 @@ class Radiofragment:Fragment() {
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .build()
             )
-            setDataSource(url)
-            prepareAsync() // might take long! (for buffering, etc)
+            try {
+                setDataSource(url.toString())
+                prepareAsync() // might take long! (for buffering, etc)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
         radio_mediaPlayer.setOnPreparedListener(object : MediaPlayer.OnPreparedListener {
             override fun onPrepared(mp: MediaPlayer?) {
@@ -137,6 +153,21 @@ class Radiofragment:Fragment() {
             }
 
         })
+    }
+
+    fun isNetworkConnected(): Boolean {
+        val cm =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val ni = cm.activeNetworkInfo
+        if (ni == null) {
+            Toast.makeText(
+                requireContext(),
+                "للأسف لا يوجد لديك اتصال بالانترنت",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        }
+        return true
     }
 
 
