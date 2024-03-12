@@ -3,9 +3,8 @@ package com.android.islami.islamiproject.projectfragment
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +16,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.android.islami.R
 import com.android.islami.islamiproject.Api.BuildRetrofit
+import com.android.islami.islamiproject.Api.Constant
 import com.android.islami.islamiproject.Api.RadioResponse
 import com.android.islami.islamiproject.Api.RadiosItem
 import retrofit2.Call
@@ -64,50 +64,58 @@ class Radiofragment:Fragment() {
         buttonnext = requireView().findViewById(R.id.next)
         buttonprev = requireView().findViewById(R.id.prev)
 
+        if (!isNetworkConnected() && !(radio_mediaPlayer.isPlaying)) progressBar.isVisible = true
+
 
         buttonStop.setOnClickListener {
+            if (isNetworkConnected()) {
 
-            progressBar.isVisible = true
-            radio_text.text = radio_item?.get(position)?.name
-            if (is_play == 0) {
-                isNetworkConnected()
-                play_sound(position)
-                buttonStop.setImageResource(R.drawable.ic_pause_radio)
-                is_play = 1
+                radio_text.text = radio_item?.get(position)?.name
+
+                if (is_play == 0) {
+
+                    play_sound(position)
+                    buttonStop.setImageResource(R.drawable.ic_pause_radio)
+                    is_play = 1
+                } else {
+
+                    progressBar.isVisible = false
+                    radio_mediaPlayer.stop()
+                    buttonStop.setImageResource(R.drawable.ic_play_radio)
+                    is_play = 0
+
+                }
             } else {
-
-                progressBar.isVisible = false
-                radio_mediaPlayer.stop()
-                buttonStop.setImageResource(R.drawable.ic_play_radio)
-                is_play = 0
-
+                progressBar.isVisible = true
             }
+
         }
         buttonnext.setOnClickListener {
-            isNetworkConnected()
-            position++
+            if (isNetworkConnected()) {
+                position++
 
-            radio_text.text = radio_item?.get(position)?.name
+                radio_text.text = radio_item?.get(position)?.name
 
-            if (radio_mediaPlayer.isPlaying) {
-                radio_mediaPlayer.stop()
+                if (radio_mediaPlayer.isPlaying) {
+                    radio_mediaPlayer.stop()
 
+                }
+                play_sound(position)
             }
-            play_sound(position)
-
         }
        buttonprev.setOnClickListener {
-           isNetworkConnected()
-           position--
+           if (isNetworkConnected()) {
+               position--
 
-           //first audio
-           if (position < 0) {
-               radio_mediaPlayer.stop()
-           } else {
+               //first audio
+               if (position < 0) {
+                   radio_mediaPlayer.stop()
+               } else {
 
-               if (radio_mediaPlayer.isPlaying) radio_mediaPlayer.stop()
-               radio_text.text = radio_item?.get(position)?.name
-               play_sound(position)
+                   if (radio_mediaPlayer.isPlaying) radio_mediaPlayer.stop()
+                   radio_text.text = radio_item?.get(position)?.name
+                   play_sound(position)
+               }
            }
         }
 
@@ -115,16 +123,20 @@ class Radiofragment:Fragment() {
 
     fun get_radio_api(){
 
-        BuildRetrofit.get_api().get_radio().enqueue(object :Callback<RadioResponse>{
-            override fun onResponse(call: Call<RadioResponse>, response: Response<RadioResponse>) {
-                radio_item = response.body()?.radios
-                Log.e("onResponse: ", response.body()?.radios.toString())
-            }
+        BuildRetrofit.get_api(Constant.radio_base_url).get_radio()
+            .enqueue(object : Callback<RadioResponse> {
+                override fun onResponse(
+                    call: Call<RadioResponse>,
+                    response: Response<RadioResponse>
+                ) {
+                    radio_item = response.body()?.radios
+                    // Log.e("onResponse: ", response.body()?.radios.toString())
+                }
 
-            override fun onFailure(call: Call<RadioResponse>, t: Throwable) {
+                override fun onFailure(call: Call<RadioResponse>, t: Throwable) {
 
 
-            }
+                }
 
         })
     }
@@ -156,15 +168,12 @@ class Radiofragment:Fragment() {
     }
 
     fun isNetworkConnected(): Boolean {
-        val cm =
-            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val ni = cm.activeNetworkInfo
-        if (ni == null) {
-            Toast.makeText(
-                requireContext(),
-                "للأسف لا يوجد لديك اتصال بالانترنت",
-                Toast.LENGTH_SHORT
-            ).show()
+        val wifi_manager =
+            requireActivity().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifi_is_enabled = wifi_manager.isWifiEnabled
+
+        if (!wifi_is_enabled) {
+            Toast.makeText(context, "للاسف ليس لديك اتصال بالانترنت", Toast.LENGTH_SHORT).show()
             return false
         }
         return true

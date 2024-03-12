@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.islami.Constent
 import com.android.islami.R
 import com.android.islami.islamiproject.Api.BuildRetrofit
+import com.android.islami.islamiproject.Api.Constant
 import com.android.islami.islamiproject.Api.DataItem
 import com.android.islami.islamiproject.Api.QuranResponse
 import com.android.islami.islamiproject.main.SuraDetailes
@@ -168,6 +169,7 @@ class QuranFragment: Fragment() {
 
         init()
 
+
     }
 
     fun init() {
@@ -214,19 +216,21 @@ class QuranFragment: Fragment() {
                 quranPlay: ImageView,
                 quranProgress: ProgressBar
             ) {
+                if (isNetworkConnected()) {
+                    if (quran_mediaPlayer.isPlaying || is_play == 1) {
+                        quranProgress.isVisible = false
+                        quranPlay.setImageResource(R.drawable.ic_play_radio)
+                        quran_mediaPlayer.stop()
+                        is_play = 0
 
-
-                if (quran_mediaPlayer.isPlaying || is_play == 1) {
-                    quranProgress.isVisible = false
-                    quranPlay.setImageResource(R.drawable.ic_play_radio)
-                    quran_mediaPlayer.stop()
-                    is_play = 0
-
+                    } else {
+                        quranPlay.setImageResource(R.drawable.ic_pause_radio)
+                        quran_sound(pos, quranProgress)
+                        is_play = 1
+                    }
                 } else {
-                    isNetworkConnected()
-                    quranPlay.setImageResource(R.drawable.ic_pause_radio)
-                    quran_sound(pos, quranProgress)
-                    is_play = 1
+                    quranProgress.isVisible = true
+
                 }
             }
 
@@ -241,15 +245,19 @@ class QuranFragment: Fragment() {
     }
 
     fun get_quran_audio() {
-        BuildRetrofit.get_api().get_quran_audio().enqueue(object : Callback<QuranResponse> {
-            override fun onResponse(call: Call<QuranResponse>, response: Response<QuranResponse>) {
-                quran_list = response.body()?.data
-            }
+        BuildRetrofit.get_api(Constant.quran_base_url).get_quran_audio()
+            .enqueue(object : Callback<QuranResponse> {
+                override fun onResponse(
+                    call: Call<QuranResponse>,
+                    response: Response<QuranResponse>
+                ) {
+                    quran_list = response.body()?.data
+                }
 
-            override fun onFailure(call: Call<QuranResponse>, t: Throwable) {
-            }
+                override fun onFailure(call: Call<QuranResponse>, t: Throwable) {
+                }
 
-        })
+            })
     }
 
     fun quran_sound(position: Int, quranProgress: ProgressBar) {
@@ -281,16 +289,12 @@ class QuranFragment: Fragment() {
     }
 
     fun isNetworkConnected(): Boolean {
-        val cm =
-            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val ni = cm.activeNetworkInfo
-        if (ni == null) {
+        val wifi_manager =
+            requireActivity().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifi_is_enabled = wifi_manager.isWifiEnabled
 
-            Toast.makeText(
-                requireContext(),
-                "للأسف لا يوجد لديك اتصال بالانترنت",
-                Toast.LENGTH_SHORT
-            ).show()
+        if (!wifi_is_enabled) {
+            Toast.makeText(context, "للاسف ليس لديك اتصال بالانترنت", Toast.LENGTH_SHORT).show()
             return false
         }
         return true
