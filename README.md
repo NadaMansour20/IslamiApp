@@ -1,6 +1,6 @@
 <h1> Islami App </h1>
 Android Mobile Application that display all Verses of the Qur'an , Hadeth , Quran Radio and Tasbeh.
-and used the API to retrieve verses of the Qur’an with voice of a specific sheikh and broadcast of Qur’an
+and used the <h1>API</h1>h1> to retrieve verses of the Qur’an with voice of a specific sheikh and broadcast of Qur’an
 <h1> Screen shots</h1>
 Home screen
 
